@@ -22,6 +22,8 @@ public class Util {
     }
 
     static void Log(String content){
-        Log.i(TAG,content);
+        if (DEBUG){
+            Log.i(TAG,content);
+        }
     }
 }

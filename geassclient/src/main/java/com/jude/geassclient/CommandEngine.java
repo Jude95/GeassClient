@@ -57,7 +57,7 @@ public class CommandEngine {
         Util.Log("write command "+command+" start");
         String sb = command.getCommand() + " 2>&1\n";
         sink.write(sb.getBytes());
-        sink.write(("\necho "+END+"\n").getBytes());
+        sink.write(("\necho "+END+" $?\n").getBytes()); //使得输出最后一行为 "{END} {resultCode}"
         sink.flush();
         Util.Log("write command "+command+" finish");
     }
@@ -76,17 +76,17 @@ public class CommandEngine {
             if (pos >= 0) { // 读取到命令结束标记
                 line = line.substring(pos);
                 String[] fields = line.split(" ");
-                if (fields.length > 2) {
+                if (fields.length > 1) {
                     int exitCode = -1;
                     try {
-                        exitCode = Integer.parseInt(fields[2]);
+                        exitCode = Integer.parseInt(fields[1]);
                     } catch (Exception e) {
                     }
                     response.resultCode = exitCode;
                 }
                 break;
             }
-            contentBuilder.append(line);
+            contentBuilder.append(line).append("\n");
         }
         response.result = contentBuilder.toString();
         finish();

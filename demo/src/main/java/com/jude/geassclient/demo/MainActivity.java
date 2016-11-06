@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress);
         textView = (TextView) findViewById(R.id.content);
 
-        Command command = new Command("ls /data/data");
         GeassClient client = new GeassClient();
+        Command command = new Command("ls /data/data");
         Call call = client.newCall(command);
         call.enqueue(new Callback() {
             @Override
@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         textView.setText("onFailure"+e.getMessage());
                     }
                 });
+
             }
 
             @Override
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         progressBar.setVisibility(View.INVISIBLE);
-                        textView.setText(response.toString());
+                        textView.setText("onResponse"+response);
                     }
                 });
             }
