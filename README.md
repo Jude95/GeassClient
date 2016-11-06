@@ -5,7 +5,7 @@ Android Root开发模块。
 
 #Dependency
 ```Groovy
-compile 'com.squareup.okio:okio:1.11.0'
+compile 'com.jude.geassclient:geassclient:1.0.0'
 ```
 #Usage
 ```java
@@ -38,7 +38,7 @@ Call超时的功能还没测试。也不知道现在的有用没。
 ##Other
 项目依赖了Okio库,如果怕版本冲突
 ```Groovy
-compile ('com.squareup.okio:okio:1.11.0') {
+compile ('com.jude.geassclient:geassclient:1.0.0') {
    exclude module: 'okio'
 }
 ```
