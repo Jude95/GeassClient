@@ -1,5 +1,7 @@
 # GeassClient
-Android Root开发模块
+Android Root开发模块。
+维持终端池,可以多线程同步执行SU命令。
+支持同步和异步2种方式灵活执行SU命令。
 
 #Dependency
 ```Groovy
