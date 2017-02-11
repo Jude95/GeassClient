@@ -1,7 +1,6 @@
 package com.jude.geassclient;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -20,37 +19,12 @@ public class CommandEngine {
     private BufferedSource source;
     private BufferedSink sink;
 
-    public CommandEngine(GeassClient client, Command command) {
+    public CommandEngine(GeassClient client, Command command) throws IOException {
         this.client = client;
         this.command = command;
-    }
-
-    void prepare() throws IOException{
-        Util.Log("prepared command "+command+" start");
         this.shell = client.getShellPool().get();
         source = shell.source;
         sink = shell.sink;
-        source.timeout().timeout(command.getOutOfTime(), TimeUnit.MILLISECONDS);
-
-
-        //wait for root
-        sink.write("echo Started\n".getBytes());
-        sink.flush();
-        while (true) {
-            String line = source.readUtf8Line();
-            if (line == null) {
-                throw new IOException("stdout line is null! Access was denied or this executeable is not a shell!");
-            }
-            if ("".equals(line)) {
-                continue;
-            }
-            if ("Started".equals(line)) {
-                break;
-            }
-            throw new IOException("Unable to start shell, unexpected output \"" + line + "\"");
-        }
-
-        Util.Log("prepared command "+command+" finish");
     }
 
     void write() throws IOException{

@@ -1,15 +1,17 @@
 # GeassClient
-Android Root开发模块。
-维持终端池,可以多线程同步执行SU命令。
-支持同步和异步2种方式灵活执行SU命令。
+Android 终端命令开发模块。
+支持SU命令执行。
+维持终端池,可以多线程同步执行命令。
+支持同步和异步2种方式灵活执行命令。
 
 #Dependency
 ```Groovy
-compile 'com.jude:geassclient:1.0.0'
+compile 'com.jude:geassclient:1.1.0'
 ```
 #Usage
 ```java
-GeassClient client = new GeassClient();
+GeassClient client = GeassClient.newNormalClient();
+GeassClient client = GeassClient.newRootClient();
 //创建命令
 Command command = new Command("ls /data/data");
 Call call = client.newCall(command);

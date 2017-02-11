@@ -12,6 +12,7 @@ import com.jude.geassclient.Callback;
 import com.jude.geassclient.Command;
 import com.jude.geassclient.GeassClient;
 import com.jude.geassclient.Response;
+import com.jude.geassclient.Util;
 
 import java.io.IOException;
 
@@ -29,8 +30,10 @@ public class MainActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress);
         textView = (TextView) findViewById(R.id.content);
 
-        GeassClient client = new GeassClient();
-        Command command = new Command("ls /data/data");
+        Util.DEBUG = true;
+        GeassClient client = GeassClient.newNormalClient();
+
+        Command command = new Command("cat /proc/stat");
         Call call = client.newCall(command);
         call.enqueue(new Callback() {
             @Override
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         progressBar.setVisibility(View.INVISIBLE);
+                        e.printStackTrace();
                         textView.setText("onFailure"+e.getMessage());
                     }
                 });

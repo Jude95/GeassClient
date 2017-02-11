@@ -2,10 +2,7 @@ package com.jude.geassclient;
 
 import android.util.Log;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -24,16 +21,19 @@ public class Shell {
     public BufferedSource source;
     public BufferedSink sink;
 
-    private Shell(String shell, ArrayList<String> customEnv, String baseDirectory)
+    private Shell(String shell)
             throws IOException {
-        Util.Log("Shell Start");
 
+        Util.Log("Shell Starting");
         // start shell process!
-        shellProcess = runWithEnv(shell, customEnv, baseDirectory);
+        shellProcess = new ProcessBuilder(shell).start();
 
         source = Okio.buffer(Okio.source(shellProcess.getInputStream()));
         sink = Okio.buffer(Okio.sink(shellProcess.getOutputStream()));
+
+        Util.Log("Shell Started");
     }
+
 
     /**
      * Destroy shell process considering that the process could already be
@@ -57,52 +57,10 @@ public class Shell {
 
 
     public static Shell startRootShell() throws IOException {
-        return startRootShell(null,null);
-    }
-    /**
-     * Start root shell
-     *
-     * @param customEnv
-     * @param baseDirectory
-     * @return
-     * @throws IOException
-     */
-    public static Shell startRootShell(ArrayList<String> customEnv, String baseDirectory)
-            throws IOException {
-        String path = "su";
-        // On some versions of Android (ICS) LD_LIBRARY_PATH is unset when using
-        // su
-        // We need to pass LD_LIBRARY_PATH over su for some commands to work
-        // correctly.
-        if (customEnv == null) {
-            customEnv = new ArrayList<String>();
-        }
-        customEnv.add("LD_LIBRARY_PATH=" + LD_LIBRARY_PATH);
-        return new Shell(path, customEnv, baseDirectory);
+        return new Shell("su");
     }
 
-    public static Process runWithEnv(String command, ArrayList<String> customAddedEnv,
-                                     String baseDirectory) throws IOException {
-
-        Map<String, String> environment = System.getenv();
-        String[] envArray = new String[environment.size()
-                + (customAddedEnv != null ? customAddedEnv.size() : 0)];
-        int i = 0;
-        for (Map.Entry<String, String> entry : environment.entrySet()) {
-            envArray[i++] = entry.getKey() + "=" + entry.getValue();
-        }
-        if (customAddedEnv != null) {
-            for (String entry : customAddedEnv) {
-                envArray[i++] = entry;
-            }
-        }
-
-        Process process;
-        if (baseDirectory == null) {
-            process = Runtime.getRuntime().exec(command, envArray, null);
-        } else {
-            process = Runtime.getRuntime().exec(command, envArray, new File(baseDirectory));
-        }
-        return process;
+    public static Shell startNormalShell() throws IOException {
+        return new Shell("sh");
     }
 }

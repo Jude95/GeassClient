@@ -66,7 +66,6 @@ public class Call {
             throw new IOException("Canceled");
         }
         engine = new CommandEngine(client,command);
-        engine.prepare();
         engine.write();
         engine.read();
         return engine.getResponse();

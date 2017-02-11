@@ -9,11 +9,19 @@ import java.util.concurrent.TimeUnit;
 public class GeassClient implements Cloneable{
 
     private Dispatcher dispatcher;
-    private ShellPool shellPool;
+    private ShellPool mShellPool;
 
-    public GeassClient() {
+    private GeassClient(ShellPool shellPool) {
         dispatcher = new Dispatcher();
-        shellPool = new ShellPool();
+        this.mShellPool = shellPool;
+    }
+
+    public static GeassClient newRootClient(){
+        return new GeassClient(new RootShellPool());
+    }
+
+    public static GeassClient newNormalClient(){
+        return new GeassClient(new NormalShellPool());
     }
 
     public void setTimeOut(long timeout,TimeUnit unit){
@@ -35,7 +43,7 @@ public class GeassClient implements Cloneable{
     }
 
     public ShellPool getShellPool() {
-        return shellPool;
+        return mShellPool;
     }
 
     public Call newCall(Command command) {
